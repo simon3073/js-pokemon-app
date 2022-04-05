@@ -1,3 +1,13 @@
+/*
+-- Previous submission
+
+alert('Hello World');
+
+let favoriteFood = 'Everything';
+document.write(favoriteFood);
+
+*/
+
 // Array of Pokemon data to display in the application
 let pokemonList = [
 	{
