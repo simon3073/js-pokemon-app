@@ -18,21 +18,55 @@ let pokemonRepository = (function () {
 		}
 	];
 
+	// Return all the Pokemon data
 	function getAll() {
 		return pokemonList;
 	}
 
-	function add() {
-		return pokemonList;
+	// Function to adds a new Pokemon
+	function add(newPokemon) {
+		// Check if passed Pokemon is a Pokemon Object >> If not log it in the console
+		if (typeof newPokemon !== 'object') console.log('Cannot add pokemon as its not a pokemon!');
+		else {
+			// Check if the correct Pokemon properties exist [name, height, and types]
+			if (newPokemon.hasOwnProperty('name') && newPokemon.hasOwnProperty('height') && newPokemon.hasOwnProperty('types')) {
+				// If they do add it to the app
+				pokemonList.push(newPokemon);
+			} else {
+				// If not, log that its missing properties
+				console.log('Cannot add pokemon as its missing some properties');
+			}
+		}
+	}
+
+	//Function to find a Pokemon in the app
+	function find(pokemonToFind) {
+		let searchResult = pokemonList.filter((pokemon) => pokemon.name === pokemonToFind);
+		return JSON.stringify(searchResult);
 	}
 
 	return {
 		getAll,
-		add
+		add,
+		find
 	};
 })();
 
+// set variable of the HTML element to add Pokemon data to
 const pokemonDiv = document.getElementById('output');
+
+// set up the Gloom Pokemon
+let Gloom = {
+	name: 'Gloom',
+	height: 0.8,
+	types: ['grass', 'poison']
+};
+
+// add the Gloom Pokemon
+pokemonRepository.add(Gloom);
+
+// Find Ekans in the app
+console.log(pokemonRepository.find('Ekans'));
 
 // Loop through the Pokemon Object Array and add output to the websites DOM
 pokemonRepository.getAll().forEach((pokemon) => {
