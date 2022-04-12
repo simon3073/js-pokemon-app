@@ -1,22 +1,43 @@
 let pokemonRepository = (function () {
-	// Array of Pokemon data to display in the application
-	let pokemonList = [
-		{
-			name: 'Ivysaur',
-			height: 1,
-			types: ['grass', 'poison']
-		},
-		{
-			name: 'Ekans',
-			height: 2,
-			types: ['poison']
-		},
-		{
-			name: 'Fearow',
-			height: 1.2,
-			types: ['flying', 'normal']
-		}
-	];
+	// Set up an empty array for the Pokemon Fetch
+	let pokemonList = [];
+	let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=20';
+
+	// Pokemon FETCH API
+	function loadList() {
+		return fetch(apiURL)
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (json) {
+				json.results.forEach(function (item) {
+					let pokemon = {
+						name: item.name,
+						detailsUrl: item.url
+					};
+					add(pokemon);
+				});
+			})
+			.catch(function (e) {
+				console.error(e);
+			});
+	}
+
+	function loadDetails(item) {
+		let url = item.detailsUrl;
+		return fetch(url)
+			.then(function (response) {
+				return response.json();
+			})
+			.then(function (details) {
+				item.imageURL = details.sprites.front_default;
+				item.height = details.height;
+				item.types = details.types;
+			})
+			.catch(function (e) {
+				console.error(e);
+			});
+	}
 
 	// Return all the Pokemon data
 	function getAll() {
@@ -29,7 +50,7 @@ let pokemonRepository = (function () {
 		if (typeof newPokemon !== 'object') console.log('Cannot add pokemon as its not a pokemon!');
 		else {
 			// validation object to check against.
-			const requiredPokemonKeys = { name: '', height: '', types: '' };
+			const requiredPokemonKeys = { name: '', detailsUrl: '' };
 
 			// returns true if all the keys exists by using the `every` array method couple with the in operator.
 			if (Object.keys(newPokemon).every((element) => element in requiredPokemonKeys)) {
@@ -66,7 +87,9 @@ let pokemonRepository = (function () {
 	}
 
 	function showDetails(pokemon) {
-		console.log(pokemon.name);
+		loadDetails(pokemon).then(function () {
+			console.log(pokemon);
+		});
 	}
 
 	//Function to find a Pokemon in the app
@@ -77,26 +100,19 @@ let pokemonRepository = (function () {
 
 	return {
 		getAll,
-		add,
-		find,
-		addListItem
+		addListItem,
+		loadList,
+		loadDetails
 	};
 })();
 
-// set up the Gloom Pokemon
-let Gloom = {
-	name: 'Gloom',
-	height: 0.8,
-	types: ['grass', 'poison']
-};
-
-// add the Gloom Pokemon
-pokemonRepository.add(Gloom);
-
 // Find Ekans in the app
-console.log(pokemonRepository.find('Ekans'));
+//console.log(pokemonRepository.find('Ekans'));
 
-// Loop through the Pokemon Object Array and for each pokemon Object > add a LI with a button to UL
-pokemonRepository.getAll().forEach((pokemon) => {
-	pokemonRepository.addListItem(pokemon);
+// Call the FETCH API function - use a prom
+pokemonRepository.loadList().then(function () {
+	// once the data is loaded - populate the UL
+	pokemonRepository.getAll().forEach((pokemon) => {
+		pokemonRepository.addListItem(pokemon);
+	});
 });
