@@ -36,6 +36,33 @@
   min-width: 375px;
 }
 
+.container .pokemon-list {
+  list-style-type: none;
+  margin-left: -35px;
+  text-align: center;
+}
+
+.container .pokemon-button {
+  margin-bottom: 15px;
+  border: none;
+  color: #1b5189;
+  padding: 0.7em 1.7em;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: #fedd49;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  -webkit-box-shadow: 6px 6px 12px #dfb702;
+          box-shadow: 6px 6px 12px #dfb702;
+}
+
+.container .pokemon-button:active {
+  color: #666;
+  -webkit-box-shadow: inset 4px 4px 12px #dfb702, inset -4px -4px 12px #fedd49;
+          box-shadow: inset 4px 4px 12px #dfb702, inset -4px -4px 12px #fedd49;
+}
+
 .panel {
   width: 400px;
   height: 350px;

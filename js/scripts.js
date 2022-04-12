@@ -28,15 +28,41 @@ let pokemonRepository = (function () {
 		// Check if passed Pokemon is a Pokemon Object >> If not log it in the console
 		if (typeof newPokemon !== 'object') console.log('Cannot add pokemon as its not a pokemon!');
 		else {
-			// Check if the correct Pokemon properties exist [name, height, and types]
-			if (newPokemon.hasOwnProperty('name') && newPokemon.hasOwnProperty('height') && newPokemon.hasOwnProperty('types')) {
-				// If they do add it to the app
+			// validation object to check against.
+			const requiredPokemonKeys = { name: '', height: '', types: '' };
+
+			// returns true if all the keys exists by using the `every` array method couple with the in operator.
+			if (Object.keys(newPokemon).every((element) => element in requiredPokemonKeys)) {
 				pokemonList.push(newPokemon);
 			} else {
-				// If not, log that its missing properties
-				console.log('Cannot add pokemon as its missing some properties');
+				console.error('Incorrect keys in newPokemon');
 			}
 		}
+	}
+
+	// set variable of the HTML element to add Pokemon data to
+	const pokemonUL = document.querySelector('.pokemon-list');
+
+	// Function to add a button within a li tag to the ul element
+	function addListItem(pokemon) {
+		// create the li and button elements
+		let pokemonLI = document.createElement('li');
+		let pokemonButton = document.createElement('button');
+
+		// set up the button event listener, text and class
+		pokemonButton.addEventListener('click', () => {
+			showDetails(pokemon);
+		});
+		pokemonButton.innerText = pokemon.name;
+		pokemonButton.classList.add('pokemon-button');
+
+		// add the created elements to the ul
+		pokemonLI.appendChild(pokemonButton);
+		pokemonUL.appendChild(pokemonLI);
+	}
+
+	function showDetails(pokemon) {
+		console.log(pokemon.name);
 	}
 
 	//Function to find a Pokemon in the app
@@ -48,12 +74,11 @@ let pokemonRepository = (function () {
 	return {
 		getAll,
 		add,
-		find
+		find,
+		addListItem,
+		showDetails
 	};
 })();
-
-// set variable of the HTML element to add Pokemon data to
-const pokemonDiv = document.getElementById('output');
 
 // set up the Gloom Pokemon
 let Gloom = {
@@ -68,10 +93,7 @@ pokemonRepository.add(Gloom);
 // Find Ekans in the app
 console.log(pokemonRepository.find('Ekans'));
 
-// Loop through the Pokemon Object Array and add output to the websites DOM
+// Loop through the Pokemon Object Array and for each pokemon Object > add a LI with a button to UL
 pokemonRepository.getAll().forEach((pokemon) => {
-	pokemonDiv.innerHTML += `<b>${pokemon.name} (Height: ${pokemon.height})</b>`;
-	// If pokemon height above 1.8 - add a special message
-	if (pokemon.height > 1.8) pokemonDiv.innerHTML += ` <i>${pokemon.name} is a big Pokemon!</i>`;
-	pokemonDiv.innerHTML += `<br>`;
+	pokemonRepository.addListItem(pokemon);
 });
