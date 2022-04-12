@@ -1,10 +1,17 @@
 let pokemonRepository = (function () {
 	// Set up an empty array for the Pokemon Fetch
 	let pokemonList = [];
-	let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=20';
+	let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=10';
+
+	// set variable of the HTML element to add Pokemon data to
+	const pokemonUL = document.querySelector('.pokemon-list');
+
+	// set variable of loader element
+	let loaderEl = document.querySelector('.loader-container');
 
 	// Pokemon FETCH API
 	function loadList() {
+		showLoader();
 		return fetch(apiURL)
 			.then(function (response) {
 				return response.json();
@@ -17,6 +24,7 @@ let pokemonRepository = (function () {
 					};
 					add(pokemon);
 				});
+				hideLoader();
 			})
 			.catch(function (e) {
 				console.error(e);
@@ -24,6 +32,7 @@ let pokemonRepository = (function () {
 	}
 
 	function loadDetails(item) {
+		showLoader();
 		let url = item.detailsUrl;
 		return fetch(url)
 			.then(function (response) {
@@ -33,10 +42,19 @@ let pokemonRepository = (function () {
 				item.imageURL = details.sprites.front_default;
 				item.height = details.height;
 				item.types = details.types;
+				hideLoader();
 			})
 			.catch(function (e) {
 				console.error(e);
 			});
+	}
+
+	function showLoader() {
+		loaderEl.classList.toggle('hide');
+	}
+
+	function hideLoader() {
+		loaderEl.classList.toggle('hide');
 	}
 
 	// Return all the Pokemon data
@@ -60,9 +78,6 @@ let pokemonRepository = (function () {
 			}
 		}
 	}
-
-	// set variable of the HTML element to add Pokemon data to
-	const pokemonUL = document.querySelector('.pokemon-list');
 
 	// Function to add a button within a li tag to the ul element
 	function addListItem(pokemon) {

@@ -1,6 +1,6 @@
 ## Simple JS Application
 
-_Project Description to go here_
+_App that lists Pokemons and allows you to get their details_
 
 Developer: Simon Bertoli
 
@@ -16,7 +16,7 @@ Developer: Simon Bertoli
 
 ## APIs Used
 
-_TBD_
+The Pokémon API - https://pokeapi.co/api/v2/pokemon/
 
 <br/>
 
