@@ -1,7 +1,10 @@
 let pokemonRepository = (function () {
-	// Set up an empty array for the Pokemon Fetch
+	// Set up an empty array for the Pokemon Fetch using the dataLength variable
 	let pokemonList = [];
-	let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=10';
+	let dataLength = 10;
+
+	// Assign Pokemon Fetch URL to a variable;
+	let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=' + dataLength;
 
 	// set variable of the HTML element to add Pokemon data to
 	const pokemonUL = document.querySelector('.pokemon-list');
@@ -9,22 +12,25 @@ let pokemonRepository = (function () {
 	// set variable of loader element
 	let loaderEl = document.querySelector('.loader-container');
 
+	// set a variable for the modal container
+	let modalContainer = document.querySelector('#modal-container');
+
 	// Pokemon FETCH API
 	function loadList() {
-		showLoader();
+		toggleLoader();
 		return fetch(apiURL)
 			.then(function (response) {
 				return response.json();
 			})
 			.then(function (json) {
-				json.results.forEach(function (item) {
+				json.results.forEach(function (item, i) {
 					let pokemon = {
 						name: item.name,
 						detailsUrl: item.url
 					};
 					add(pokemon);
 				});
-				hideLoader();
+				toggleLoader();
 			})
 			.catch(function (e) {
 				console.error(e);
@@ -32,7 +38,7 @@ let pokemonRepository = (function () {
 	}
 
 	function loadDetails(item) {
-		showLoader();
+		toggleLoader();
 		let url = item.detailsUrl;
 		return fetch(url)
 			.then(function (response) {
@@ -42,18 +48,15 @@ let pokemonRepository = (function () {
 				item.imageURL = details.sprites.front_default;
 				item.height = details.height;
 				item.types = details.types;
-				hideLoader();
+				toggleLoader();
 			})
 			.catch(function (e) {
 				console.error(e);
 			});
 	}
 
-	function showLoader() {
-		loaderEl.classList.toggle('hide');
-	}
-
-	function hideLoader() {
+	function toggleLoader() {
+		pokemonUL.classList.toggle('hide');
 		loaderEl.classList.toggle('hide');
 	}
 
@@ -77,6 +80,96 @@ let pokemonRepository = (function () {
 				console.error('Incorrect keys in newPokemon');
 			}
 		}
+	}
+
+	function showModal(pokemon) {
+		// get the position of the pokemon loaded so we can use it to load buttons and navigate
+		let pokemonPos = pokemonList
+			.map((i) => {
+				return i.name;
+			})
+			.indexOf(pokemon.name);
+
+		modalContainer.innerHTML = '';
+
+		// Add inner modal div
+		let modal = document.createElement('div');
+		modal.classList.add('modal');
+
+		// add modal close button
+		let modalCloseBtn = document.createElement('button');
+		modalCloseBtn.classList.add('modal-close');
+		modalCloseBtn.innerText = 'CLOSE';
+		modalCloseBtn.addEventListener('click', hideModal);
+
+		// Add modal header and content
+		let modalHeading = document.createElement('h1');
+		// Capitalise first letter of header
+		let pokemonCapName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+		modalHeading.innerText = pokemonCapName;
+
+		// Add image and height
+		let modalPokemonSprite = document.createElement('img');
+		modalPokemonSprite.setAttribute('src', pokemon.imageURL);
+
+		let modalContent = document.createElement('p');
+		modalContent.innerText = `${pokemonCapName} is ${pokemon.height}m tall`;
+
+		let modalPokemonTypes = document.createElement('p');
+		modalPokemonTypes.classList.add('types');
+
+		// loop through pokemon types
+		pokemon.types.forEach((p, index) => {
+			if (index < 1) modalPokemonTypes.innerText = 'Types are: '; // Add text if first loop
+			let pokemonTypeText = index < 1 ? p.type.name : `, ${p.type.name}`; // Add a comma if not the first loop
+			modalPokemonTypes.innerText += pokemonTypeText;
+		});
+
+		// Add all the created elements
+		modalContainer.appendChild(modal);
+		modal.appendChild(modalCloseBtn);
+		modal.appendChild(modalHeading);
+		modal.appendChild(modalPokemonSprite);
+		modal.appendChild(modalContent);
+		modal.appendChild(modalPokemonTypes);
+
+		let navBtnDiv = document.createElement('div');
+		navBtnDiv.classList.add('nav-btn-container');
+		modal.appendChild(navBtnDiv);
+
+		// Load Previous and Next pokemon buttons
+		if (pokemonPos > 0) {
+			let prevPokemonBtn = document.createElement('button');
+			prevPokemonBtn.classList.add('navbutton');
+			prevPokemonBtn.innerText = '<<';
+			prevPokemonBtn.addEventListener('click', () => {
+				navigatePokemons(pokemonPos - 1);
+			});
+			navBtnDiv.appendChild(prevPokemonBtn);
+		}
+
+		if (pokemonPos < dataLength - 1) {
+			let nextPokemonBtn = document.createElement('button');
+			nextPokemonBtn.classList.add('navbutton');
+			nextPokemonBtn.innerText = '>>';
+			nextPokemonBtn.addEventListener('click', () => {
+				navigatePokemons(pokemonPos + 1);
+			});
+			navBtnDiv.appendChild(nextPokemonBtn);
+		}
+
+		modalContainer.classList.add('is-visible');
+		modalContainer.addEventListener('click', ({ target }) => {
+			if (target === modalContainer) hideModal();
+		});
+	}
+
+	function hideModal() {
+		modalContainer.classList.remove('is-visible');
+	}
+
+	function navigatePokemons(newPokemonIndex) {
+		showDetails(pokemonList[newPokemonIndex]);
 	}
 
 	// Function to add a button within a li tag to the ul element
@@ -103,26 +196,29 @@ let pokemonRepository = (function () {
 
 	function showDetails(pokemon) {
 		loadDetails(pokemon).then(function () {
-			console.log(pokemon);
+			showModal(pokemon);
 		});
 	}
 
 	//Function to find a Pokemon in the app
-	function find(pokemonToFind) {
-		let searchResult = pokemonList.filter((pokemon) => pokemon.name === pokemonToFind);
-		return JSON.stringify(searchResult);
+	function findPokemon(pokemonToFind) {
+		// Change search term to lower case for search
+		let pokemonSearchTerm = pokemonToFind.toLowerCase();
+		let searchResult = pokemonList.find((pokemon) => pokemon.name === pokemonSearchTerm);
+
+		// return name or no-result message
+		return searchResult !== undefined ? searchResult.name : 'Sorry no result on your search';
 	}
 
 	return {
 		getAll,
 		addListItem,
 		loadList,
-		loadDetails
+		loadDetails,
+		hideModal,
+		findPokemon
 	};
 })();
-
-// Find Ekans in the app
-//console.log(pokemonRepository.find('Ekans'));
 
 // Call the FETCH API function - use a prom
 pokemonRepository.loadList().then(function () {
@@ -130,4 +226,11 @@ pokemonRepository.loadList().then(function () {
 	pokemonRepository.getAll().forEach((pokemon) => {
 		pokemonRepository.addListItem(pokemon);
 	});
+});
+
+window.addEventListener('keydown', (e) => {
+	let modalContainer = document.querySelector('#modal-container');
+	if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
+		pokemonRepository.hideModal();
+	}
 });
