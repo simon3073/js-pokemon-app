@@ -5,31 +5,69 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Pokédex App</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-            integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
-            crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="css/styles.css" rel="stylesheet" type="text/css" />
     </head>
 
     <body>
+        <!-- Modal -->
+        <div class="modal fade" id="pokemonModal" tabindex="-1" role="dialog" aria-labelledby="pokemonModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalHeader"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body mx-0">
 
-        <div class="container">
-            <div id='modal-container'>
-                <div class='modal'>
+                    </div>
+                    <div class="modal-footer">
+                        <button disabled type="button" class="btn btn-primary" id="prevPokeBtn">Previous
+                            Pokémon</button>
+                        <button type="button" class="btn btn-primary" id="nextPokeBtn">Next Pokémon</button>
+                    </div>
                 </div>
             </div>
-            <img id="logo" src="img/pokemon.svg">
-            <div class="panel" id="output">
-                <div class="loader-container hide">
-                    <i class="loader spin"></i>
+        </div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container-fluid">
+                <img id="logo" src="img/pokemon.svg">
+                <div class="col-sm-8 col-md-6 col-lg-4" id="navbarSupportedContent">
+                    <form class="d-flex">
+                        <input class="form-control input-md" id="searchTerm" type="search"
+                            placeholder="Search the Pokédex" aria-label="Search">
+                        <button class="btn btn-outline-light ml-2" id="searchPokelist" type="button">Search</button>
+                    </form>
                 </div>
-                <div class="loader"></div>
-                <ul class="pokemon-list"></ul>
             </div>
+        </nav>
+        <div class="app-container container-fluid">
+            <main class="container">
+                <div class="row">
+                    <div class="col-md-3 col-sm-1"></div>
+                    <div class="col mt-3 pokemon-div hide btn-group-vertical" id="output"></div>
+                    <div class="spinner-border text-primary mx-auto loader" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                    <div class="col-md-3 col-sm-1"></div>
+                </div>
+            </main>
         </div>
         <script src="js/polyfill.min.js"></script>
         <script src="js/fetch.umd.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+            integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
     </body>
 

@@ -1,16 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
-* {
-  border: 0;
-  margin: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-}
-
 body {
   background-color: #f8cc02;
 }
 
-.container {
+.app-container {
   min-height: 100vh;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -29,244 +22,99 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   font-family: 'Fira Sans', sans-serif;
-  font-size: 1.5rem;
   color: #1b5189;
-  line-height: 1.2em;
+  /*
+	.pokemon-list {
+		list-style-type: none;
+		margin-left: -35px;
+		text-align: center;
+
+		&.hide {
+			display: none;
+		}
+	}
+
+	.pokemon-button {
+		margin-bottom: 15px;
+		border: none;
+		color: $font-color;
+		padding: 0.7em 1.7em;
+		font-size: 18px;
+		border-radius: 0.5em;
+		background: $panel-lighten-2;
+		cursor: pointer;
+		transition: all 0.3s;
+		box-shadow: 6px 6px 12px $panel-darken-1;
+
+		@media screen and (max-width: $small) {
+			min-height: 14px;
+			margin-bottom: 5px;
+		}
+	}
+
+	.pokemon-button:active {
+		color: #666;
+		box-shadow: inset 4px 4px 12px $panel-darken-1, inset -4px -4px 12px $panel-lighten-2;
+	}
+	*/
 }
 
 @media screen and (max-width: 380px) {
-  .container {
+  .app-container {
     min-height: 10vh;
     background-image: none;
     padding-top: 20px;
   }
 }
 
-.container img {
+.navbar img {
   border-style: none;
   position: relative;
   z-index: 1;
-  min-width: 375px;
+  width: 180px;
+  padding-bottom: 10px;
 }
 
 @media screen and (max-width: 380px) {
-  .container img {
-    min-width: 275px;
+  .navbar img {
+    margin: 0 auto;
   }
 }
 
-.container .pokemon-list {
-  list-style-type: none;
-  margin-left: -35px;
-  text-align: center;
+@media screen and (max-width: 380px) {
+  .navbar {
+    padding-bottom: 20px;
+  }
 }
 
-.container .pokemon-list.hide {
+.pokemon-div .btn {
+  border-radius: 20px;
+}
+
+.loader {
+  width: 3rem;
+  height: 3rem;
+}
+
+.hide {
   display: none;
 }
 
-.container .pokemon-button {
-  margin-bottom: 15px;
-  border: none;
-  color: #1b5189;
-  padding: 0.7em 1.7em;
-  font-size: 18px;
-  border-radius: 0.5em;
-  background: #fedd49;
-  cursor: pointer;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-  -webkit-box-shadow: 6px 6px 12px #dfb702;
-          box-shadow: 6px 6px 12px #dfb702;
-}
-
-@media screen and (max-width: 380px) {
-  .container .pokemon-button {
-    min-height: 14px;
-    margin-bottom: 5px;
-  }
-}
-
-.container .pokemon-button:active {
-  color: #666;
-  -webkit-box-shadow: inset 4px 4px 12px #dfb702, inset -4px -4px 12px #fedd49;
-          box-shadow: inset 4px 4px 12px #dfb702, inset -4px -4px 12px #fedd49;
-}
-
-.panel {
-  width: 400px;
-  min-height: 680px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  margin-top: -40px;
-  border-radius: 25px;
-  padding: 50px 0 20px 0;
-  overflow: hidden;
-  background-color: #f8cc02;
-}
-
-.loader-container {
-  display: -ms-grid;
-  display: grid;
-  place-items: center;
-  height: 500px;
-}
-
-.loader-container.hide {
-  display: none;
-}
-
-.loader-container .loader {
-  display: block;
-  position: relative;
-  width: 50%;
-  display: -ms-grid;
-  display: grid;
-  place-items: center;
-}
-
-.loader-container .loader::before,
-.loader-container .loader::after {
-  content: '';
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  position: absolute;
-}
-
-.loader-container .loader.spin::before {
-  width: 6vmin;
-  height: 6vmin;
-  border: 10px solid #1b5189;
-  border-top-color: transparent;
-  border-radius: 50%;
-  -webkit-animation: loader-spin 1s linear infinite;
-          animation: loader-spin 1s linear infinite;
-}
-
-@-webkit-keyframes loader-spin {
-  100% {
-    -webkit-transform: rotate(1turn);
-            transform: rotate(1turn);
-  }
-}
-
-@keyframes loader-spin {
-  100% {
-    -webkit-transform: rotate(1turn);
-            transform: rotate(1turn);
-  }
-}
-
-#modal-container {
-  position: fixed;
-  padding: 20px;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(27, 81, 137, 0.85);
-  /* to show it above other content */
-  z-index: 999;
-  /* to allow scrolling if the screen is not high enough*/
-  overflow: auto;
-  /* this is used to center the modal */
-  display: none;
-  text-align: center;
-}
-
-#modal-container.is-visible {
-  display: -ms-grid;
-  display: grid;
-}
-
-#modal-container .modal {
-  margin: auto;
-  display: inline-block;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  background: #fff9e1;
-  padding: 30px;
-  min-width: 40%;
-  text-align: left;
-  border-radius: 25px;
-}
-
-@media screen and (max-width: 380px) {
-  #modal-container .modal {
-    min-width: 100%;
-    padding: 15px 10px;
-  }
-}
-
-#modal-container .modal-close {
-  float: right;
-  -webkit-appearance: none;
-  border: 0;
-  background: none;
-  color: #1b5189;
-  cursor: pointer;
-}
-
-#modal-container h1 {
-  margin-top: 0;
-  font-size: 1.75em;
-  text-decoration: underline;
-}
-
-@media screen and (max-width: 380px) {
-  #modal-container h1 {
-    font-size: 1.25em;
-  }
-}
-
-#modal-container p {
+.modal p {
+  font-size: 2em;
   font-weight: bold;
   text-align: center;
 }
 
-#modal-container img {
-  min-width: 30%;
-  padding-bottom: 10px;
+.modal img {
+  min-width: 50%;
   height: auto;
   display: block;
   margin: auto;
 }
 
-#modal-container .types {
-  padding-top: 10px;
-  font-size: 0.8em;
+.modal .types {
+  font-size: 1.5em;
   font-style: italic;
-}
-
-#modal-container .nav-btn-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-
-#modal-container .navbutton {
-  margin: 25px 5px 0 0;
-  border: none;
-  color: #fff;
-  font-size: 1.5rem;
-  padding: 10px 20px;
-  border-radius: 15px;
-  background: #1b5189;
-  cursor: pointer;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
 }
 /*# sourceMappingURL=styles.css.map */
