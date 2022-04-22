@@ -14,10 +14,10 @@
         <!-- Modal -->
         <div class="modal fade" id="pokemonModal" tabindex="-1" role="dialog" aria-labelledby="pokemonModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-dialog modal modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalHeader"></h5>
+                        <h5 class="modal-title w-100 text-center" id="modalHeader"></h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -33,28 +33,32 @@
                 </div>
             </div>
         </div>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container-fluid">
-                <img id="logo" src="img/pokemon.svg">
-                <div class="col-sm-8 col-md-6 col-lg-4" id="navbarSupportedContent">
-                    <form class="d-flex">
-                        <input class="form-control input-md" id="searchTerm" type="search"
-                            placeholder="Search the Pokédex" aria-label="Search">
-                        <button class="btn btn-outline-light ml-2" id="searchPokelist" type="button">Search</button>
-                    </form>
-                </div>
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <a class="navbar-brand" aria-current="page" href="index.html"><img id="logo" src="img/pokemon.svg"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://pokeapi.co/api/v2/pokemon/" target="_blank">API</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="http://simonbertoli.com" target="_blank">Portfolio</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control input-lg" id="searchTerm" type="search"
+                        placeholder="Type to narrow down your search!" aria-label="Search">
+                </form>
+            </div>
+
+
             </div>
         </nav>
         <div class="app-container container-fluid">
-            <main class="container">
-                <div class="row">
-                    <div class="col-md-3 col-sm-1"></div>
-                    <div class="col mt-3 pokemon-div hide btn-group-vertical" id="output"></div>
-                    <div class="spinner-border text-primary mx-auto loader" role="status">
-                        <span class="visually-hidden"></span>
-                    </div>
-                    <div class="col-md-3 col-sm-1"></div>
-                </div>
+            <main class="pokemons container-fluid mt-3">
             </main>
         </div>
         <script src="js/polyfill.min.js"></script>

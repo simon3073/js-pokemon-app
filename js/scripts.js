@@ -1,7 +1,7 @@
 let pokemonRepository = (function () {
 	// Set up an empty array for the Pokemon Fetch using the dataLength variable
 	let pokemonList = [];
-	let dataLength = 100;
+	let dataLength = 150;
 
 	// Assign Pokemon Fetch URL to a variable;
 	let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=' + dataLength;
@@ -10,7 +10,7 @@ let pokemonRepository = (function () {
 	let pokemonPos = null;
 
 	// set variable of the HTML element to add Pokemon data to
-	const pokemonDIV = document.querySelector('.pokemon-div');
+	const pokemonDIV = document.querySelector('.pokemons');
 
 	// set variable of loader element
 	let loaderEl = document.querySelector('.loader');
@@ -38,8 +38,8 @@ let pokemonRepository = (function () {
 
 	// Hide and Unhide the loader and pokemon divs
 	function toggleLoader() {
-		pokemonDIV.classList.toggle('hide');
-		loaderEl.classList.toggle('hide');
+		// pokemonDIV.classList.toggle('hide');
+		// loaderEl.classList.toggle('hide');
 	}
 
 	// Return all the Pokemon data
@@ -123,6 +123,11 @@ let pokemonRepository = (function () {
 		pokemonDIV.appendChild(pokemonButton);
 	}
 
+	// Clear List -- for when we are searching
+	function clearListItems() {
+		$('.pokemons').empty();
+	}
+
 	//Function to find a Pokemon in the appList and then retrieve its individual values
 	function findPokemon(pokemonToFind) {
 		// Change search term to lower case for search
@@ -158,6 +163,7 @@ let pokemonRepository = (function () {
 	return {
 		getAll,
 		addListItem,
+		clearListItems,
 		loadList,
 		findPokemon,
 		loadDetails,
@@ -195,13 +201,14 @@ $('#pokemonModal').on('show.bs.modal', ({ relatedTarget }) => {
 });
 
 // Event handler for Navbar search function
-$('#searchPokelist').on('click', () => {
-	// run findPokemon to see if we have a valid search result
-	// -- if so open the modal
-	// -- if not alert a unsuccessful message
-	let pokemonFound = pokemonRepository.findPokemon($('#searchTerm').val());
-	if (pokemonFound) $('#pokemonModal').modal('show');
-	else alert('Your Pokemon could not be found');
+$('#searchTerm').on('input', () => {
+	// Clear Pokemons
+	pokemonRepository.clearListItems();
+
+	// Use the search term and filter to leave array of applicable Pokemons -- then load
+	let searchTerm = $('#searchTerm').val();
+	let filteredSearch = pokemonRepository.getAll().filter((pokemon) => pokemon.name.indexOf(searchTerm) > -1);
+	filteredSearch.forEach((pokemon) => pokemonRepository.addListItem(pokemon));
 });
 
 // Modal Pokemon Nav Buttons
