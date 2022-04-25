@@ -73,7 +73,7 @@ let pokemonRepository = (function () {
 			.indexOf(pokemon.name);
 
 		// reset the modal
-		$('#modalHeader').html('');
+		$('.modal-header h5').remove();
 		$('.modal-body').html('');
 		$('#prevPokeBtn').off();
 		$('#nextPokeBtn').off();
@@ -82,8 +82,8 @@ let pokemonRepository = (function () {
 		let capPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
 
 		// Load Pokemon Header, Image and Content
-		$('#modalHeader').html(capPokemonName);
-		$('.modal-body').append(`<img id="pokemon-image" src="${pokemon.imageURL}"/>`);
+		$(`<h5 class="modal-title w-100 text-center" id="modalHeader" alt="You have loaded ${capPokemonName}">${capPokemonName}</h5>`).insertBefore('.modal-header button');
+		$('.modal-body').append(`<img alt="The ${capPokemonName} Pokemon" id="pokemon-image" src="${pokemon.imageURL}"/>`);
 		$('.modal-body').append(`<p>${capPokemonName} is ${pokemon.height}m tall`);
 		$('.modal-body').append('<p class="types"><p>');
 

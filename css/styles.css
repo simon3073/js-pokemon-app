@@ -18,8 +18,6 @@ body {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1920' height='1080' preserveAspectRatio='none' viewBox='0 0 1920 1080'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1073%26quot%3b)' fill='none'%3e%3crect width='1920' height='1080' x='0' y='0' fill='rgba(255%2c 245%2c 199%2c 1)'%3e%3c/rect%3e%3cpath d='M0%2c557.755C134.526%2c559.267%2c265.906%2c656.897%2c391.972%2c609.921C523.574%2c560.882%2c603.1%2c429.212%2c672.549%2c307.143C747.089%2c176.124%2c854.198%2c26.703%2c804.806%2c-115.714C754.34%2c-261.225%2c558.592%2c-284.922%2c435.232%2c-377.131C343.439%2c-445.745%2c280.816%2c-550.159%2c172.709%2c-588.194C61.548%2c-627.304%2c-62.304%2c-629.97%2c-173.635%2c-591.348C-282.326%2c-553.642%2c-347.876%2c-451.952%2c-435.367%2c-377.248C-541.066%2c-286.996%2c-709.796%2c-241.948%2c-741.362%2c-106.592C-772.669%2c27.654%2c-647.53%2c144.276%2c-585.725%2c267.492C-526.431%2c385.702%2c-504.844%2c542.449%2c-386.349%2c601.171C-267.831%2c659.904%2c-132.265%2c556.268%2c0%2c557.755' fill='%23ffefa3'%3e%3c/path%3e%3cpath d='M1920 1720.96C2097.987 1762.261 2258.874 1933.0610000000001 2433.337 1878.768 2604.511 1825.499 2685.228 1626.458 2754.709 1461.199 2822.723 1299.429 2854.8 1122.78 2823.803 950.053 2793.417 780.732 2697.369 634.0129999999999 2583.177 505.35400000000004 2470.029 377.871 2338.727 258.45399999999995 2173.345 217.187 2010.9180000000001 176.65800000000002 1843.079 224.85000000000002 1685.499 281.36199999999997 1535.173 335.27200000000005 1389.1779999999999 408.922 1289.897 534.012 1192.838 656.303 1172.592 815.126 1140.5810000000001 967.936 1106.402 1131.099 1014.478 1310.979 1096.768 1455.9569999999999 1179.5230000000001 1601.7530000000002 1380.318 1620.079 1539.899 1671.449 1664.038 1711.4099999999999 1792.963 1691.482 1920 1720.96' fill='%23fffceb'%3e%3c/path%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1073'%3e%3crect width='1920' height='1080' fill='white'%3e%3c/rect%3e%3c/mask%3e%3c/defs%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-size: cover;
-  font-family: 'Fira Sans', sans-serif;
-  color: #1b5189;
 }
 
 @media screen and (max-width: 375px) {
@@ -28,6 +26,14 @@ body {
     background-image: none;
     padding-top: 20px;
   }
+}
+
+.bg-primary {
+  background-color: #185999 !important;
+}
+
+.navbar {
+  background-color: #185999;
 }
 
 .navbar img {
@@ -77,6 +83,7 @@ body {
 
 .pokemons .btn {
   border-radius: 20px;
+  background-color: #185999;
 }
 
 @media screen and (max-width: 768px) {
@@ -102,6 +109,11 @@ body {
   display: none;
 }
 
+.modal {
+  font-family: 'Fira Sans', sans-serif;
+  color: #185999;
+}
+
 .modal p {
   font-size: 2em;
   font-weight: bold;
@@ -117,6 +129,11 @@ body {
 
 .modal h5 {
   font-size: 2em;
+  font-weight: bold;
+}
+
+.modal .close {
+  font-size: 2.5em;
 }
 
 .modal .types {
