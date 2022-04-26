@@ -89,6 +89,7 @@ body {
 .pokemons .btn {
   border-radius: 20px;
   background-color: #185999;
+  border: none;
 }
 
 @media screen and (max-width: 768px) {

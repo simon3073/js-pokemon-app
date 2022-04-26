@@ -1,6 +1,7 @@
 let pokemonRepository = (function () {
-	// Set up an empty array for the Pokemon Fetch using the dataLength variable
-	const pokemonList = [];
+	// Set up an empty arrays for the Pokemon Fetch using the dataLength variable
+	const origPokemonList = []; // An array for the original fetch - to refer back to when using the search to narrow down
+	let workingPokemonList = []; // and a working version
 	const dataLength = 150;
 
 	// Assign Pokemon Fetch URL to a variable;
@@ -13,7 +14,6 @@ let pokemonRepository = (function () {
 	const pokemonDIV = document.querySelector('.pokemons');
 	const modalHeader = document.querySelector('.modal-header button');
 	const modalBody = document.querySelector('.modal-body');
-	const modalFooter = document.querySelector('.modal-footer');
 	const modalPrevButton = document.querySelector('#prevPokeBtn');
 	const modalNextButton = document.querySelector('#nextPokeBtn');
 
@@ -28,7 +28,7 @@ let pokemonRepository = (function () {
 				return response.json();
 			})
 			.then(function (json) {
-				json.results.forEach(function (item, i) {
+				json.results.forEach(function (item) {
 					let pokemon = {
 						name: item.name,
 						detailsUrl: item.url
@@ -37,8 +37,8 @@ let pokemonRepository = (function () {
 				});
 				toggleLoader();
 			})
-			.catch(function (e) {
-				console.error(e);
+			.catch(function () {
+				alert("Not able load Pokemon's right now. Please try again later");
 			});
 	};
 
@@ -54,26 +54,29 @@ let pokemonRepository = (function () {
 
 	// Return all the Pokemon data
 	const getAll = () => {
-		return pokemonList;
+		return origPokemonList;
 	};
 
 	// Function to adds a new Pokemon
 	const add = (newPokemon) => {
-		// Check if passed Pokemon is a Pokemon Object >> If not log it in the console
-		if (typeof newPokemon !== 'object') console.log('Cannot add pokemon as its not a pokemon!');
-		else {
+		// Check if passed Pokemon is a Pokemon Object >> If not log it in the alert the user
+		if (typeof newPokemon !== 'object') {
+			alert("Error processing Pokemon's. Please try again later");
+		} else {
 			// validation object to check against.
 			const requiredPokemonKeys = { name: '', detailsUrl: '' };
 
 			// returns true if all the keys exists by using the `every` array method couple with the in operator.
 			if (Object.keys(newPokemon).every((element) => element in requiredPokemonKeys)) {
-				pokemonList.push(newPokemon);
+				origPokemonList.push(newPokemon);
 			} else {
-				console.error('Incorrect keys in newPokemon');
+				alert("Error processing Pokemon's. Please try again later");
 			}
 		}
+		workingPokemonList = origPokemonList;
 	};
 
+	// Clear the modal before loading new data
 	const clearModal = () => {
 		const modalTitle = document.querySelector('.modal-title');
 		if (typeof modalTitle != 'undefined' && modalTitle != null) {
@@ -87,13 +90,11 @@ let pokemonRepository = (function () {
 
 	const populateModal = (pokemon) => {
 		// get the index position of the pokemon loaded so we can use it to load buttons and navigate
-		pokemonPos = pokemonList
+		pokemonPos = workingPokemonList
 			.map((i) => {
 				return i.name;
 			})
 			.indexOf(pokemon.name);
-
-		clearModal();
 
 		// Capitalise Pokemon Name
 		const capPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
@@ -111,7 +112,7 @@ let pokemonRepository = (function () {
 		pokemonImg.setAttribute('src', pokemon.imageURL);
 		pokemonImg.setAttribute('id', 'pokemon-image');
 		pokemonImg.setAttribute('alt', `The ${capPokemonName} Pokemon`);
-		pokemonImg.addEventListener('load', (e) => {
+		pokemonImg.addEventListener('load', () => {
 			toggleModalLoader();
 		});
 		modalBody.appendChild(pokemonImg);
@@ -145,7 +146,7 @@ let pokemonRepository = (function () {
 			modalPrevButton.setAttribute('disabled', true);
 		}
 
-		if (pokemonPos < dataLength - 1) {
+		if (pokemonPos < workingPokemonList.length - 1) {
 			modalNextButton.removeAttribute('disabled');
 			modalNextButton.addEventListener('click', loadNavigatedPokemon);
 		} else {
@@ -177,7 +178,7 @@ let pokemonRepository = (function () {
 	const findPokemon = (pokemonToFind) => {
 		// Change search term to lower case for search
 		let pokemonSearchTerm = pokemonToFind.toLowerCase();
-		let searchResult = pokemonList.find((pokemon) => pokemon.name === pokemonSearchTerm);
+		let searchResult = workingPokemonList.find((pokemon) => pokemon.name === pokemonSearchTerm);
 		// return name or null
 		return searchResult !== undefined ? searchResult : null;
 	};
@@ -194,20 +195,22 @@ let pokemonRepository = (function () {
 				item.height = details.height;
 				item.types = details.types;
 			})
-			.catch(function (e) {
-				console.error(e);
+			.catch(function () {
+				alert('Not able to retrieve details about this Pokemon right now');
 			});
 	};
 
 	// Load new the Pokemon data object based on modal nav btn click
 	const loadNavigatedPokemon = ({ target }) => {
 		let pokemonToLoad = null;
+		// Clear the modal of content
+		clearModal();
 		toggleModalLoader();
 		// Get the direction required
 		if (target.id === 'nextPokeBtn') {
-			pokemonToLoad = pokemonList[pokemonPos + 1];
+			pokemonToLoad = workingPokemonList[pokemonPos + 1];
 		} else {
-			pokemonToLoad = pokemonList[pokemonPos - 1];
+			pokemonToLoad = workingPokemonList[pokemonPos - 1];
 		}
 
 		// Then load the new Pokemons data into the modal
@@ -216,9 +219,14 @@ let pokemonRepository = (function () {
 				// Populate the Modal
 				populateModal(pokemonToLoad);
 			})
-			.catch((e) => {
-				console.error(e);
+			.catch(() => {
+				alert('Not able to retrieve details about this Pokemon right now');
 			});
+	};
+
+	// function to update the working List on a search
+	const resetWorkingPokemonList = (filteredArr) => {
+		workingPokemonList = filteredArr;
 	};
 
 	return {
@@ -230,6 +238,7 @@ let pokemonRepository = (function () {
 		loadDetails,
 		populateModal,
 		toggleModalLoader,
+		resetWorkingPokemonList,
 		clearModal
 	};
 })();
@@ -254,8 +263,8 @@ $('#pokemonModal').on('show.bs.modal', ({ relatedTarget }) => {
 			// Populate the Modal
 			pokemonRepository.populateModal(pokemon);
 		})
-		.catch((e) => {
-			console.error(e);
+		.catch(() => {
+			alert('Not able to retrieve details about this Pokemon right now');
 		});
 });
 
@@ -269,8 +278,11 @@ document.querySelector('#searchTerm').addEventListener('input', () => {
 	// Clear Pokemon's
 	pokemonRepository.clearListItems();
 
-	// Use the search term and filter to leave array of applicable Pokemons -- then load
+	// Use the search term and filter to leave array of applicable Pokemon's -- then load
 	const searchTerm = document.querySelector('#searchTerm').value;
 	const filteredSearch = pokemonRepository.getAll().filter((pokemon) => pokemon.name.indexOf(searchTerm) > -1);
 	filteredSearch.forEach((pokemon) => pokemonRepository.addListItem(pokemon));
+
+	// update the working List so that the modal navigation only works through the searched list
+	pokemonRepository.resetWorkingPokemonList(filteredSearch);
 });
