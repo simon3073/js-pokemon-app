@@ -17,8 +17,9 @@ let pokemonRepository = (function () {
 	const modalPrevButton = document.querySelector('#prevPokeBtn');
 	const modalNextButton = document.querySelector('#nextPokeBtn');
 
-	// set variable of loader element
-	const loaderEl = document.querySelector('.loader');
+	// set variable of loader elements
+	const loader = document.querySelector('.loader');
+	const modalLoader = document.querySelector('.modal-loader-div');
 
 	// Pokemon FETCH API
 	const loadList = () => {
@@ -43,8 +44,12 @@ let pokemonRepository = (function () {
 
 	// Hide and Unhide the loader and pokemon divs
 	const toggleLoader = () => {
-		// pokemonDIV.classList.toggle('hide');
-		// loaderEl.classList.toggle('hide');
+		pokemonDIV.classList.toggle('hide');
+		loader.classList.toggle('hide');
+	};
+
+	const toggleModalLoader = () => {
+		modalLoader.classList.toggle('hide');
 	};
 
 	// Return all the Pokemon data
@@ -76,8 +81,8 @@ let pokemonRepository = (function () {
 		}
 
 		modalBody.innerHTML = '';
-		// $('#prevPokeBtn').off();
-		// $('#nextPokeBtn').off();
+		modalNextButton.removeEventListener('click', loadNavigatedPokemon);
+		modalPrevButton.removeEventListener('click', loadNavigatedPokemon);
 	};
 
 	const populateModal = (pokemon) => {
@@ -106,6 +111,9 @@ let pokemonRepository = (function () {
 		pokemonImg.setAttribute('src', pokemon.imageURL);
 		pokemonImg.setAttribute('id', 'pokemon-image');
 		pokemonImg.setAttribute('alt', `The ${capPokemonName} Pokemon`);
+		pokemonImg.addEventListener('load', (e) => {
+			toggleModalLoader();
+		});
 		modalBody.appendChild(pokemonImg);
 
 		// Load Pokemon Body
@@ -194,7 +202,7 @@ let pokemonRepository = (function () {
 	// Load new the Pokemon data object based on modal nav btn click
 	const loadNavigatedPokemon = ({ target }) => {
 		let pokemonToLoad = null;
-
+		toggleModalLoader();
 		// Get the direction required
 		if (target.id === 'nextPokeBtn') {
 			pokemonToLoad = pokemonList[pokemonPos + 1];
@@ -221,6 +229,7 @@ let pokemonRepository = (function () {
 		findPokemon,
 		loadDetails,
 		populateModal,
+		toggleModalLoader,
 		clearModal
 	};
 })();
@@ -252,6 +261,7 @@ $('#pokemonModal').on('show.bs.modal', ({ relatedTarget }) => {
 
 $('#pokemonModal').on('hidden.bs.modal', function () {
 	pokemonRepository.clearModal();
+	pokemonRepository.toggleModalLoader();
 });
 
 // Event handler for Navbar search function
