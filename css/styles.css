@@ -18,6 +18,7 @@ body {
   background-image: url("../img/background.svg");
   background-repeat: no-repeat;
   background-size: cover;
+  padding-top: 10px;
 }
 
 @media screen and (max-width: 375px) {
@@ -26,6 +27,10 @@ body {
     background-image: none;
     padding-top: 20px;
   }
+}
+
+.app-container button {
+  text-transform: capitalize;
 }
 
 .bg-primary {
@@ -76,9 +81,9 @@ body {
       grid-template-columns: 1fr 1fr 1fr 1fr;
   -ms-grid-rows: auto;
       grid-template-rows: auto;
-  -webkit-column-gap: 10px;
-          column-gap: 10px;
-  row-gap: 10px;
+  -webkit-column-gap: 20px;
+          column-gap: 20px;
+  row-gap: 20px;
 }
 
 .pokemons .btn {
@@ -129,7 +134,7 @@ body {
 }
 
 .modal .modal-loader-div {
-  height: 240px;
+  height: 235px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
