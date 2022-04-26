@@ -1,22 +1,27 @@
 let pokemonRepository = (function () {
 	// Set up an empty array for the Pokemon Fetch using the dataLength variable
-	let pokemonList = [];
-	let dataLength = 150;
+	const pokemonList = [];
+	const dataLength = 150;
 
 	// Assign Pokemon Fetch URL to a variable;
-	let apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=' + dataLength;
+	const apiURL = 'https://pokeapi.co/api/v2/pokemon/?limit=' + dataLength;
 
 	// set up empty index variable for navigation and modal button set up
 	let pokemonPos = null;
 
-	// set variable of the HTML element to add Pokemon data to
+	// set variables of the HTML elements
 	const pokemonDIV = document.querySelector('.pokemons');
+	const modalHeader = document.querySelector('.modal-header button');
+	const modalBody = document.querySelector('.modal-body');
+	const modalFooter = document.querySelector('.modal-footer');
+	const modalPrevButton = document.querySelector('#prevPokeBtn');
+	const modalNextButton = document.querySelector('#nextPokeBtn');
 
 	// set variable of loader element
-	let loaderEl = document.querySelector('.loader');
+	const loaderEl = document.querySelector('.loader');
 
 	// Pokemon FETCH API
-	function loadList() {
+	const loadList = () => {
 		return fetch(apiURL)
 			.then(function (response) {
 				return response.json();
@@ -34,21 +39,21 @@ let pokemonRepository = (function () {
 			.catch(function (e) {
 				console.error(e);
 			});
-	}
+	};
 
 	// Hide and Unhide the loader and pokemon divs
-	function toggleLoader() {
+	const toggleLoader = () => {
 		// pokemonDIV.classList.toggle('hide');
 		// loaderEl.classList.toggle('hide');
-	}
+	};
 
 	// Return all the Pokemon data
-	function getAll() {
+	const getAll = () => {
 		return pokemonList;
-	}
+	};
 
 	// Function to adds a new Pokemon
-	function add(newPokemon) {
+	const add = (newPokemon) => {
 		// Check if passed Pokemon is a Pokemon Object >> If not log it in the console
 		if (typeof newPokemon !== 'object') console.log('Cannot add pokemon as its not a pokemon!');
 		else {
@@ -62,9 +67,20 @@ let pokemonRepository = (function () {
 				console.error('Incorrect keys in newPokemon');
 			}
 		}
-	}
+	};
 
-	function populateModal(pokemon) {
+	const clearModal = () => {
+		const modalTitle = document.querySelector('.modal-title');
+		if (typeof modalTitle != 'undefined' && modalTitle != null) {
+			modalTitle.parentNode.removeChild(modalTitle);
+		}
+
+		modalBody.innerHTML = '';
+		// $('#prevPokeBtn').off();
+		// $('#nextPokeBtn').off();
+	};
+
+	const populateModal = (pokemon) => {
 		// get the index position of the pokemon loaded so we can use it to load buttons and navigate
 		pokemonPos = pokemonList
 			.map((i) => {
@@ -72,44 +88,65 @@ let pokemonRepository = (function () {
 			})
 			.indexOf(pokemon.name);
 
-		// reset the modal
-		$('.modal-header h5').remove();
-		$('.modal-body').html('');
-		$('#prevPokeBtn').off();
-		$('#nextPokeBtn').off();
+		clearModal();
 
 		// Capitalise Pokemon Name
-		let capPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+		const capPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
 
-		// Load Pokemon Header, Image and Content
-		$(`<h5 class="modal-title w-100 text-center" id="modalHeader" alt="You have loaded ${capPokemonName}">${capPokemonName}</h5>`).insertBefore('.modal-header button');
-		$('.modal-body').append(`<img alt="The ${capPokemonName} Pokemon" id="pokemon-image" src="${pokemon.imageURL}"/>`);
-		$('.modal-body').append(`<p>${capPokemonName} is ${pokemon.height}m tall`);
-		$('.modal-body').append('<p class="types"><p>');
+		// Load Pokemon Header
+		const pokemonHeading = document.createElement('h5');
+		pokemonHeading.classList.add('modal-title', 'w-100', 'text-center');
+		pokemonHeading.setAttribute('id', 'modalHeader');
+		pokemonHeading.setAttribute('alt', `You have loaded ${capPokemonName}">${capPokemonName}</h5>`);
+		pokemonHeading.innerText = capPokemonName;
+		modalHeader.before(pokemonHeading);
+
+		// Load Pokemon Image
+		const pokemonImg = document.createElement('img');
+		pokemonImg.setAttribute('src', pokemon.imageURL);
+		pokemonImg.setAttribute('id', 'pokemon-image');
+		pokemonImg.setAttribute('alt', `The ${capPokemonName} Pokemon`);
+		modalBody.appendChild(pokemonImg);
+
+		// Load Pokemon Body
+		const pokemonDetails = document.createElement('p');
+		pokemonDetails.innerText = `${capPokemonName} is ${pokemon.height}m tall`;
+		modalBody.appendChild(pokemonDetails);
 
 		// loop through pokemon types
+		const pokemonTypes = document.createElement('p');
 		pokemon.types.forEach((p, index) => {
-			if (index < 1) $('.modal-body .types').html('Types are: '); // Add text if first loop
-			let pokemonTypeText = index < 1 ? p.type.name : `, ${p.type.name}`; // Add a comma if not the first loop
-			$('.modal-body .types').append(pokemonTypeText);
+			// Add text if first loop
+			pokemonTypes.classList.add('types');
+			if (index < 1) {
+				if (pokemon.types.length > 1) {
+					pokemonTypes.innerText = 'Types are: ';
+				} else {
+					pokemonTypes.innerText = 'Type is: ';
+				}
+			}
+			pokemonTypes.innerText += index < 1 ? p.type.name : `, ${p.type.name}`; // Add a comma if not the first loop
 		});
+		modalBody.appendChild(pokemonTypes);
 
 		// Set up navigation buttons accessibility
 		if (pokemonPos > 0) {
-			$('#prevPokeBtn').removeAttr('disabled');
+			modalPrevButton.removeAttribute('disabled');
+			modalPrevButton.addEventListener('click', loadNavigatedPokemon);
 		} else {
-			$('#prevPokeBtn').attr('disabled', true);
+			modalPrevButton.setAttribute('disabled', true);
 		}
 
 		if (pokemonPos < dataLength - 1) {
-			$('#nextPokeBtn').removeAttr('disabled');
+			modalNextButton.removeAttribute('disabled');
+			modalNextButton.addEventListener('click', loadNavigatedPokemon);
 		} else {
-			$('#nextPokeBtn').attr('disabled', true);
+			modalNextButton.setAttribute('disabled', true);
 		}
-	}
+	};
 
 	// Function to add a button to the DIV
-	function addListItem(pokemon) {
+	const addListItem = (pokemon) => {
 		// create the button element
 		let pokemonButton = document.createElement('button');
 
@@ -121,23 +158,23 @@ let pokemonRepository = (function () {
 
 		// add the created elements to the ul
 		pokemonDIV.appendChild(pokemonButton);
-	}
+	};
 
 	// Clear List -- for when we are searching
 	function clearListItems() {
-		$('.pokemons').empty();
+		pokemonDIV.innerHTML = '';
 	}
 
 	//Function to find a Pokemon in the appList and then retrieve its individual values
-	function findPokemon(pokemonToFind) {
+	const findPokemon = (pokemonToFind) => {
 		// Change search term to lower case for search
 		let pokemonSearchTerm = pokemonToFind.toLowerCase();
 		let searchResult = pokemonList.find((pokemon) => pokemon.name === pokemonSearchTerm);
 		// return name or null
 		return searchResult !== undefined ? searchResult : null;
-	}
+	};
 
-	function loadDetails(item) {
+	const loadDetails = (item) => {
 		// fetch extra details before a modal load
 		let url = item.detailsUrl;
 		return fetch(url)
@@ -152,13 +189,29 @@ let pokemonRepository = (function () {
 			.catch(function (e) {
 				console.error(e);
 			});
-	}
+	};
 
-	// Return new the Pokemon data object based on modal nav btn click
-	function getNavigatedPokemon(navBtn) {
-		if (navBtn === 'nextPokeBtn') return pokemonList[pokemonPos + 1];
-		else return pokemonList[pokemonPos - 1];
-	}
+	// Load new the Pokemon data object based on modal nav btn click
+	const loadNavigatedPokemon = ({ target }) => {
+		let pokemonToLoad = null;
+
+		// Get the direction required
+		if (target.id === 'nextPokeBtn') {
+			pokemonToLoad = pokemonList[pokemonPos + 1];
+		} else {
+			pokemonToLoad = pokemonList[pokemonPos - 1];
+		}
+
+		// Then load the new Pokemons data into the modal
+		loadDetails(pokemonToLoad)
+			.then(() => {
+				// Populate the Modal
+				populateModal(pokemonToLoad);
+			})
+			.catch((e) => {
+				console.error(e);
+			});
+	};
 
 	return {
 		getAll,
@@ -168,7 +221,7 @@ let pokemonRepository = (function () {
 		findPokemon,
 		loadDetails,
 		populateModal,
-		getNavigatedPokemon
+		clearModal
 	};
 })();
 
@@ -183,10 +236,7 @@ pokemonRepository.loadList().then(function () {
 // On Modal load
 $('#pokemonModal').on('show.bs.modal', ({ relatedTarget }) => {
 	let pokemon = null;
-
-	// Find pokemon term based on either the button clicked or search term entered
-	if (relatedTarget) pokemon = pokemonRepository.findPokemon(relatedTarget.innerText);
-	else pokemon = pokemonRepository.findPokemon($('#searchTerm').val());
+	pokemon = pokemonRepository.findPokemon(relatedTarget.innerText);
 
 	//Fetch details from the found pokemon obj
 	pokemonRepository
@@ -198,32 +248,19 @@ $('#pokemonModal').on('show.bs.modal', ({ relatedTarget }) => {
 		.catch((e) => {
 			console.error(e);
 		});
+});
+
+$('#pokemonModal').on('hidden.bs.modal', function () {
+	pokemonRepository.clearModal();
 });
 
 // Event handler for Navbar search function
-$('#searchTerm').on('input', () => {
-	// Clear Pokemons
+document.querySelector('#searchTerm').addEventListener('input', () => {
+	// Clear Pokemon's
 	pokemonRepository.clearListItems();
 
 	// Use the search term and filter to leave array of applicable Pokemons -- then load
-	let searchTerm = $('#searchTerm').val();
-	let filteredSearch = pokemonRepository.getAll().filter((pokemon) => pokemon.name.indexOf(searchTerm) > -1);
+	const searchTerm = document.querySelector('#searchTerm').value;
+	const filteredSearch = pokemonRepository.getAll().filter((pokemon) => pokemon.name.indexOf(searchTerm) > -1);
 	filteredSearch.forEach((pokemon) => pokemonRepository.addListItem(pokemon));
-});
-
-// Modal Pokemon Nav Buttons
-$(document).on('click', '#prevPokeBtn, #nextPokeBtn', ({ target }) => {
-	// pass getNavigatedPokemon the button id clicked to return previous or next pokemon
-	pokemon = pokemonRepository.getNavigatedPokemon(target.id);
-
-	//Fetch details from the found pokemon obj
-	pokemonRepository
-		.loadDetails(pokemon)
-		.then(() => {
-			// Populate the Modal
-			pokemonRepository.populateModal(pokemon);
-		})
-		.catch((e) => {
-			console.error(e);
-		});
 });
