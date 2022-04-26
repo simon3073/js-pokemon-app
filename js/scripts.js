@@ -161,7 +161,7 @@ let pokemonRepository = (function () {
 
 		// set up the button event listener, text and class
 		pokemonButton.innerText = pokemon.name;
-		pokemonButton.classList.add('btn', 'btn-primary', 'btn-lg', 'mb-1');
+		pokemonButton.classList.add('btn', 'btn-primary', 'btn-lg', 'mb-1', 'ripple');
 		pokemonButton.setAttribute('data-toggle', 'modal');
 		pokemonButton.setAttribute('data-target', '#pokemonModal');
 
