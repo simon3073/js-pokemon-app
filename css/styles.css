@@ -89,9 +89,16 @@ body {
 .pokemons .btn {
   border-radius: 20px;
   background-color: #185999;
+  background: -webkit-gradient(linear, left bottom, left top, from(#154c83), to(#185999));
+  background: linear-gradient(0deg, #154c83 0%, #185999 100%);
   border: none;
   -webkit-box-shadow: 0px 8px 15px rgba(6, 19, 102, 0.25);
           box-shadow: 0px 8px 15px rgba(6, 19, 102, 0.25);
+}
+
+.pokemons .btn:hover {
+  -webkit-box-shadow: 0px 1px 5px rgba(6, 19, 102, 0.25);
+          box-shadow: 0px 1px 5px rgba(6, 19, 102, 0.25);
 }
 
 @media screen and (max-width: 768px) {
