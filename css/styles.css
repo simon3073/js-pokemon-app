@@ -1,12 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap");
-* {
-  border: 0;
-  margin: 0;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+body {
+  background-color: #f8cc02;
 }
 
-.container {
+.app-container {
   min-height: 100vh;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -18,27 +15,136 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  background-image: url("../img/background.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-top: 10px;
+}
+
+@media screen and (max-width: 375px) {
+  .app-container {
+    min-height: 10vh;
+    background-image: none;
+    padding-top: 20px;
+  }
+}
+
+.app-container button {
+  text-transform: capitalize;
+}
+
+.bg-primary {
+  background-color: #185999 !important;
+}
+
+.navbar {
+  background-color: #185999;
+}
+
+.navbar img {
+  border-style: none;
+  position: relative;
+  z-index: 1;
+  width: 180px;
+  padding-bottom: 10px;
+}
+
+@media screen and (max-width: 375px) {
+  .navbar img {
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .navbar {
+    padding-bottom: 40px;
+  }
+}
+
+.navbar input {
+  width: 400px;
+  border-radius: 10px;
+}
+
+.navbar .show .d-flex {
+  padding: 20px 0 10px 0;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  background-color: #fff5c7;
+  width: 90%;
+}
+
+.pokemons {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+  -ms-grid-rows: auto;
+      grid-template-rows: auto;
+  -webkit-column-gap: 20px;
+          column-gap: 20px;
+  row-gap: 20px;
+}
+
+.pokemons .btn {
+  border-radius: 20px;
+  background-color: #185999;
+  background: -webkit-gradient(linear, left bottom, left top, from(#154c83), to(#185999));
+  background: linear-gradient(0deg, #154c83 0%, #185999 100%);
+  border: none;
+  -webkit-box-shadow: 0px 8px 15px rgba(6, 19, 102, 0.25);
+          box-shadow: 0px 8px 15px rgba(6, 19, 102, 0.25);
+}
+
+.pokemons .btn:hover {
+  -webkit-box-shadow: 0px 1px 5px rgba(6, 19, 102, 0.25);
+          box-shadow: 0px 1px 5px rgba(6, 19, 102, 0.25);
+}
+
+@media screen and (max-width: 768px) {
+  .pokemons {
+    -ms-grid-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .pokemons {
+    -ms-grid-columns: 1fr;
+        grid-template-columns: 1fr;
+  }
+}
+
+.loader {
+  margin-top: 100px;
+  width: 3rem;
+  height: 3rem;
+}
+
+.hide {
+  display: none;
+}
+
+.modal {
   font-family: 'Fira Sans', sans-serif;
-  font-size: 1.5rem;
-  color: #1b5189;
-  line-height: 1.2em;
+  color: #185999;
 }
 
-.container img {
-  border-style: none;
-  position: relative;
-  top: 90px;
-  z-index: 1;
-  min-width: 375px;
+.modal p {
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
 }
 
-.panel {
-  width: 400px;
-  height: 350px;
+.modal img {
+  min-width: 50%;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+.modal .modal-loader-div {
+  height: 235px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -49,15 +155,37 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  margin: 30px 0;
-  border-radius: 25px;
-  padding: 50px 0 0 0;
-  overflow: hidden;
-  background-color: #f8cc02;
-  -webkit-box-shadow: 36px 36px 50px 15px #feeb95;
-          box-shadow: 36px 36px 50px 15px #feeb95;
+}
+
+.modal .modal-loader-div .modal-loader {
+  width: 3rem;
+  height: 3rem;
+}
+
+.modal h5 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.modal .close {
+  font-size: 2.5em;
+}
+
+.modal .types {
+  font-size: 1.5em;
+  font-style: italic;
+}
+
+.modal .modal-footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.modal .hide {
+  display: none !important;
 }
 /*# sourceMappingURL=styles.css.map */
