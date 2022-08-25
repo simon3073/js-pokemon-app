@@ -22,24 +22,21 @@ let pokemonRepository = (function () {
 	const modalLoader = document.querySelector('.modal-loader-div');
 
 	// Pokemon FETCH API
-	const loadList = () => {
-		return fetch(apiURL)
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (json) {
-				json.results.forEach(function (item) {
-					let pokemon = {
-						name: item.name,
-						detailsUrl: item.url
-					};
-					add(pokemon);
-				});
-				toggleLoader();
-			})
-			.catch(function () {
-				alert("Not able load Pokemon's right now. Please try again later");
+	const loadList = async () => {
+		try {
+			const response = await fetch(apiURL);
+			const json = await response.json();
+			json.results.forEach(function (item) {
+				let pokemon = {
+					name: item.name,
+					detailsUrl: item.url
+				};
+				add(pokemon);
 			});
+			toggleLoader();
+		} catch (error) {
+			alert("Cannot load Pokemon's right now, try again later");
+		}
 	};
 
 	// Hide and Unhide the loader and pokemon divs
@@ -183,25 +180,23 @@ let pokemonRepository = (function () {
 		return searchResult !== undefined ? searchResult : null;
 	};
 
-	const loadDetails = (item) => {
+	const loadDetails = async (item) => {
 		// fetch extra details before a modal load
 		let url = item.detailsUrl;
-		return fetch(url)
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (details) {
-				item.imageURL = details.sprites.front_default;
-				item.height = details.height;
-				item.types = details.types;
-			})
-			.catch(function () {
-				alert('Not able to retrieve details about this Pokemon right now');
-			});
+		try {
+			const response = await fetch(url);
+			const details = await response.json();
+			item.imageURL = details.sprites.front_default;
+			item.height = details.height;
+			item.types = details.types;
+			return item;
+		} catch (error) {
+			alert('Not able to retrieve details about this Pokemon right now');
+		}
 	};
 
 	// Load new the Pokemon data object based on modal nav btn click
-	const loadNavigatedPokemon = ({ target }) => {
+	const loadNavigatedPokemon = async ({ target }) => {
 		let pokemonToLoad = null;
 		// Clear the modal of content
 		clearModal();
@@ -213,15 +208,13 @@ let pokemonRepository = (function () {
 			pokemonToLoad = workingPokemonList[pokemonPos - 1];
 		}
 
-		// Then load the new Pokemons data into the modal
-		loadDetails(pokemonToLoad)
-			.then(() => {
-				// Populate the Modal
-				populateModal(pokemonToLoad);
-			})
-			.catch(() => {
-				alert('Not able to retrieve details about this Pokemon right now');
-			});
+		// Then load the new Pokemon's data into the modal
+		try {
+			let updatedPokemon = await pokemonRepository.loadDetails(pokemonToLoad);
+			populateModal(updatedPokemon);
+		} catch (error) {
+			alert('Not able to retrieve details about this Pokemon right now');
+		}
 	};
 
 	// function to update the working List on a search
@@ -243,31 +236,32 @@ let pokemonRepository = (function () {
 	};
 })();
 
-// Call the FETCH API function - use a prom
-pokemonRepository.loadList().then(function () {
-	// once the data is loaded - populate the UL
-	pokemonRepository.getAll().forEach((pokemon) => {
-		pokemonRepository.addListItem(pokemon);
-	});
-});
+(async () => {
+	// Fetch the api and load onto the page
+	try {
+		await pokemonRepository.loadList();
+		pokemonRepository.getAll().forEach((pokemon) => {
+			pokemonRepository.addListItem(pokemon);
+		});
+	} catch (error) {
+		alert("Cannot load Pokemon's right now, try again later");
+	}
+})();
 
-// On Modal load
-$('#pokemonModal').on('show.bs.modal', ({ relatedTarget }) => {
+// On Modal load --> update the data
+$('#pokemonModal').on('show.bs.modal', async ({ relatedTarget }) => {
 	let pokemon = null;
 	pokemon = pokemonRepository.findPokemon(relatedTarget.innerText);
 
-	//Fetch details from the found pokemon obj
-	pokemonRepository
-		.loadDetails(pokemon)
-		.then(() => {
-			// Populate the Modal
-			pokemonRepository.populateModal(pokemon);
-		})
-		.catch(() => {
-			alert('Not able to retrieve details about this Pokemon right now');
-		});
+	try {
+		let updatedPokemon = await pokemonRepository.loadDetails(pokemon);
+		pokemonRepository.populateModal(updatedPokemon);
+	} catch (error) {
+		alert('Not able to retrieve details about this Pokemon right now');
+	}
 });
 
+// on Modal close - clear the modal
 $('#pokemonModal').on('hidden.bs.modal', function () {
 	pokemonRepository.clearModal();
 	pokemonRepository.toggleModalLoader();
