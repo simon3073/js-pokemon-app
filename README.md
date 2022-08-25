@@ -1,6 +1,12 @@
 ## JS Pokedex Application
 
-Application that uses an API call to fetch and list Pokemons. Selecting or searching for Pokemons reveals basic details and images.
+<img src="https://res.cloudinary.com/ds9nzjduw/image/upload/v1661410230/CareeerFoundry%20Cuourse/Pokedex_Screenshot_usvpbn.png">
+
+ https://simon3073.github.io/js-pokemon-app/
+
+ <br>
+
+Application that uses an API call to fetch and list Pokemons. Selecting or searching for Pokemons reveals pokemon details and images.
 
 <br/>
 
